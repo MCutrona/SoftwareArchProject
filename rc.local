@@ -1,0 +1,26 @@
+#!/bin/bash
+# rc.local
+
+# Log for debugging
+echo "Startup script ran at $(date)" >> /home/mcutrona/startup.log 2>&1
+
+# Build OpenCV
+cd /home/mcutrona/build
+sudo make install >> /home/mcutrona/startup.log 2>&1
+sudo ldconfig >> /home/mcutrona/startup.log 2>&1
+
+# Start virtual environment
+source /home/mcutrona/.venv/bin/activate >> /home/mcutrona/startup.log 2>&1
+
+# Link OpenCV
+ln -sf /usr/local/lib/python3.11/dist-packages/cv2/python-3.11/cv2.cpython-311-arm-linux-gnueabihf.so \
+  /home/mcutrona/.venv/lib/python3.11/site-packages/cv2.so >> /home/mcutrona/startup.log 2>&1
+
+# Test OpenCV installation
+python -c "import cv2; print(cv2.__version__)" >> /home/mcutrona/startup.log 2>&1
+
+# Run your Python script
+cd /home/mcutrona/Code
+python car.py >> /home/mcutrona/startup.log 2>&1 &
+
+exit 0
