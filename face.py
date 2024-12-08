@@ -1,11 +1,11 @@
-# use haarcascades to detect faces
+# use haarcascades to detect cars
 # Import the OpenCV library
 import cv2
 from datetime import datetime
 import time
 
-# Load the pre-trained Haar Cascade model for face detection
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+# Load the pre-trained Haar Cascade model for car detection
+car_cascade = cv2.CascadeClassifier('cars.xml')
 
 # Open a connection to the first camera (usually the built-in webcam)
 cap = cv2.VideoCapture(0)
@@ -22,8 +22,8 @@ while True:
     # Convert the frame to grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    # Detect faces in the frame
-    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    # Detect cars in the frame
+    cars = car_cascade.detectMultiScale(gray, 1.3, 5)
 
     # Get the dimensions of the frame
     height, width, _ = frame.shape
@@ -35,21 +35,21 @@ while True:
     # []'Top Left', 'Top Right', 'Bottom Left', 'Bottom Right']
     quads = [False, False, False, False]
 
-    # Draw a rectangle around the detected faces
-    for (x, y, w, h) in faces:
+    # Draw a rectangle around the detected cars
+    for (x, y, w, h) in cars:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        # Detect what quadrent the faces are in
+        # Detect what quadrent the cars are in
 
-        # Get the center of the face
-        face_x = x + w // 2
-        face_y = y + h // 2
+        # Get the center of the car
+        car_x = x + w // 2
+        car_y = y + h // 2
 
-        # Determine the quadrant of the face
-        if face_x < center_x and face_y < center_y:
+        # Determine the quadrant of the car
+        if car_x < center_x and car_y < center_y:
             quads[0] = True
-        elif face_x >= center_x and face_y < center_y:
+        elif car_x >= center_x and car_y < center_y:
             quads[1] = True
-        elif face_x < center_x and face_y >= center_y:
+        elif car_x < center_x and car_y >= center_y:
             quads[2] = True
         else:
             quads[3] = True
@@ -59,9 +59,9 @@ while True:
     timestamp = datetime.now().strftime('%m-%d-%y_%H-%M-%S')
     cv2.imwrite(f'images/{timestamp}.jpg', frame)
 
-    # add the image time and the number of faces detected to log.txt file
+    # add the image time and the number of cars detected to log.txt file
     with open('images/log.txt', 'a') as f:
-        f.write(f'{timestamp}\t\t{quads[0]}\t{quads[1]}\t{quads[2]}\t{quads[3]}\n')
+        f.write(f'{timestamp}\t{quads[0]}\t{quads[1]}\t{quads[2]}\t{quads[3]}\n')
 
     # Display the captured frame in a window named 'frame' Good for debugging
     # cv2.imshow('frame', frame)
