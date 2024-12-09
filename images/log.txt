@@ -1,2 +1,6 @@
 Timestamp               Q1      Q2      Q3      Q4
 
+12-08-24_20-00-15	True	False	False	False
+12-08-24_20-00-25	False	True	False	False
+12-08-24_20-00-35	False	False	True	False
+12-08-24_20-00-45	False	False	False	True
